@@ -21,7 +21,7 @@ public class EcoResource {
     public String greeting(@PathParam("name")String name) {
         return "Hallo " + name + "!";
     }
-    
+
     /*@GET
     @Path("/morgen")
     public String getMorgen() {
