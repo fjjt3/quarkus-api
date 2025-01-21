@@ -1,5 +1,6 @@
 package quarkus;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -14,19 +15,24 @@ import java.util.List;
 @Path("/temperaturas")
 public class TemperaturasResource {
 
-    private List<Temperatura> valores = new ArrayList<>();
+    private TemperaturaService temperaturas;
+
+    @Inject
+    public TemperaturasResource(TemperaturaService temperaturas) {
+        this.temperaturas = temperaturas;
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Temperatura nueva(Temperatura temp) {
-        valores.add(temp);
+        temperaturas.addTemperatura(temp);
         return temp;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Temperatura> list() {
-        return Collections.unmodifiableList(valores);
+        return temperaturas.getTemperaturas();
     }
 
     @GET
@@ -34,5 +40,12 @@ public class TemperaturasResource {
     @Path("/one")
     public Temperatura medicion(){
         return new Temperatura("Estepona", 8 ,18);
+    }
+
+    @GET
+    @Path("/maxima")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String maxima(){
+        return  Integer.toString(temperaturas.maximaTemperatura());
     }
 }
